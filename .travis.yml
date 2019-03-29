@@ -3,3 +3,6 @@ language: rust
 deploy:
   provider: script
   script: echo "TESTING DEPLOY"
+  on:
+    tags: true
+    condition: branch = master and tag =~ /^*v[0-9]/
