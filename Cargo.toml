@@ -1,7 +1,5 @@
 [workspace]
 
 members = [
-    "git",
-    "handlers",
-    "server",
+    "patata",
 ]
