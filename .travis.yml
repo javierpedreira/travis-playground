@@ -1,0 +1,5 @@
+language: rust
+
+deploy:
+  provider: script
+  script: echo "TESTING DEPLOY"
