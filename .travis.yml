@@ -1,0 +1,23 @@
+language: rust
+before_deploy:
+- export REAL_BRANCH=$(git ls-remote origin | sed -n "\|$TRAVIS_COMMIT\s\+refs/heads/|{s///p}")
+
+before_script:
+  - cargo install --force cargo-audit
+  - rustup component add clippy
+
+script:
+  - cargo build
+  - cargo test
+  - cargo audit
+
+before_deploy:
+  - cd patata
+deploy:
+  provider: cargo
+  skip_cleanup: true
+  token:
+    secure: eIOYttA5E6yqrH8G8wO/Asw6SXn3HzzUcFpqFaeM4GweuekyMDS+Hbt39XlgP5SyxOV4teQZ0QuV4h0H6z0OSXWNo0tY7DB3UZ09uwTGovuAtmr63DMOXnBrbDxqQH0shbZq9Kff7Pif2o9PEj8Fbjly78y33nN9E4oH+i+qkUJT3a8GJ9YzMcOeHcEqQEwELCkFPmqB5XVFsk50NCkpz1bwMpieCD1CXhvMB3w75pOwFr49bGo5ba+RxKEC3Et0Y76LJL/FJyPnv3kdrEkAk9F65Rwz0CIOakLWnRVtniRYtkM1ltkqeRzIeO7X6ACjU6L9a/HwVn0gJbBXGFJT5lGlZ6b4wANOxBHA9UVasiL1+O8TQelPdpW7YEJ0fO3cR62cTBWk+53gPudiauks44g/jnlBoiGCzlTrXIKJjpla8ZDz96zj08Em8aX0VQgnuPL38Qh5G4TS97hpqj8ACYuNotSGWSkfidYVL0XQhKmg9/dD8E9dtlITVrjr73Aprfdl3YJL2tQpDG8g0Pc9uQa06kCHmmlTrcyx3mx1vfh2Hv5GhUkqscLE6Ev0CxINfGSmc+CnP92ceoRGu8gef27Gk7aHPnIFvU9s/GmDVsp41L9jKkiORvx7XOhZD2Utdd3NcMlo7vvk6ZRo8rvwSJ9N51QR+tLrLJQiefMpoD0=
+  on:
+    branch:
+      - master

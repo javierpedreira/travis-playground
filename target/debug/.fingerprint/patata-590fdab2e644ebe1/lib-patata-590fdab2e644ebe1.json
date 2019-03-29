@@ -1,0 +1,1 @@
+{"rustc":18410498187106234573,"features":"[]","target":12439242986139684510,"profile":5570823050345758421,"path":15515161642745087591,"deps":[["git2 v0.8.0","git2",4045952501155034443]],"local":[{"MtimeBased":[[1554108313,945201958],".fingerprint/patata-590fdab2e644ebe1/dep-lib-patata-590fdab2e644ebe1"]}],"rustflags":[],"edition":"Edition2018"}

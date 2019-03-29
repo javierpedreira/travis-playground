@@ -1,0 +1,1 @@
+{"rustc":18410498187106234573,"features":"[\"default\", \"openssl-sys\", \"ssl\"]","target":4944179213620976468,"profile":11870183705523825133,"path":18148149715061550383,"deps":[["cc v1.0.32","cc",8922523443045057374],["pkg-config v0.3.14","pkg_config",4544980707814357585]],"local":[{"Precalculated":"0.4.17"}],"rustflags":[],"edition":"Edition2015"}
