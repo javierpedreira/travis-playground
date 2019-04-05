@@ -10,13 +10,13 @@ script:
 - cargo audit
 os:
 - linux
-- osx
+
 deploy:
   provider: releases
   skip_cleanup: true
   api_key:
     secure: eMitAzp8Nz4yTrgEFHi7+j+gBEIJRStBrc9XyRrZCkQXwy+VSoCLSF/AJqEPecNIUqPebrxEUHXFPMxiDdgKd879tlwhykrMY5qcuyoNt8WHOSH1N0ouL+iFBjPmnUpVCZtKpB146j/YQSvHwECMZkDA/LkJ4+E7b5e3BfioiLPgmcMXObRw5QdU+wxGYfaM3oey7ppNmeousLWs1oX0f7xwKRBinGqxZxefq+iAnaoTBVszSJYa1M2J0BMpaNDtIRt4YvxokO8rKVmDYtjSNnN3u5qAhNkL8amcbxW0hm1F/5XWL0nq6RUuxpTZBgWFsZBuugNfqIef9Zr9O/IBZwDCxLxr2rm5Gq4mAIVYd71QbLtTK1ZtHxcFyOUWgkVlmPR8wSpT57gUUL3zV0OV3rhZBbeTcfFlpbjAiEoHy3Srask+HYlTOpjzJp5hVJe96v+zy1hjBCGjpoMq3bLIY7AyNE0m9vEykygTguIs22543hgoUkDn+PDceSMM8w4Z/zmNGbgb9LKPJ4t0yMkcvi0jOoeqMTRbsg8N8fFz2MdIfiu4WWoX6qdsyarrr34XQvrwmGYEToQmG4hC9IFuzYfp4m8QMXcU4pMqI6JYRYCSiZEWEharvP1iFuXRzKdw+eA6mGD/vnVL9OwMfiNPpKk0u5MOwfv79WKIuTrUOfs=
-  file: target/patata-$TRAVIS_OS_NAME
+  file: target/patata-$TRAVIS_TAG
   on:
-    branch:
-    - master
+    tags: true
+
