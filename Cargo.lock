@@ -131,7 +131,7 @@ dependencies = [
 
 [[package]]
 name = "patata"
-version = "0.1.0"
+version = "0.0.1"
 dependencies = [
  "git2 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "tempdir 0.3.7 (registry+https://github.com/rust-lang/crates.io-index)",

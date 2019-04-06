@@ -1,22 +1,56 @@
+
+sudo: required
 language: rust
-before_deploy:
-- export REAL_BRANCH=$(git ls-remote origin | sed -n "\|$TRAVIS_COMMIT\s\+refs/heads/|{s///p}")
-before_script:
-- cargo install --force cargo-audit
-- rustup component add clippy
-script:
-- cargo build --release
-- cargo test
-- cargo audit
 os:
 - linux
+- osx
+
+addons:
+  apt:
+    packages:
+      # For building MUSL static builds on Linux.
+      - musl-tools
+      # packages for kcov
+      - cmake
+      - libcurl4-openssl-dev
+      - libelf-dev
+      - libdw-dev
+      - binutils-dev
+    sources:
+      - kalakris-cmake
+  homebrew:
+    packages:
+      - cmake
+
+
+before_deploy:
+- export REAL_BRANCH=$(git ls-remote origin | sed -n "\|$TRAVIS_COMMIT\s\+refs/heads/|{s///p}")
+
+before_script:
+  - export PATH=$HOME/.cargo/bin:$PATH
+  - cargo install cargo-update || echo "cargo-update already installed"
+  - cargo install cargo-travis || echo "cargo-travis already installed"
+  - cargo install-update -a # update outdated cached binaries
+
+script:
+  - cargo build --release
+  - cargo test
+  - cargo bench
+
+after_success:
+  - cargo coverage
+  - bash <(curl -s https://codecov.io/bash)
+
 
 deploy:
   provider: releases
   skip_cleanup: true
-  api_key:
-    secure: eMitAzp8Nz4yTrgEFHi7+j+gBEIJRStBrc9XyRrZCkQXwy+VSoCLSF/AJqEPecNIUqPebrxEUHXFPMxiDdgKd879tlwhykrMY5qcuyoNt8WHOSH1N0ouL+iFBjPmnUpVCZtKpB146j/YQSvHwECMZkDA/LkJ4+E7b5e3BfioiLPgmcMXObRw5QdU+wxGYfaM3oey7ppNmeousLWs1oX0f7xwKRBinGqxZxefq+iAnaoTBVszSJYa1M2J0BMpaNDtIRt4YvxokO8rKVmDYtjSNnN3u5qAhNkL8amcbxW0hm1F/5XWL0nq6RUuxpTZBgWFsZBuugNfqIef9Zr9O/IBZwDCxLxr2rm5Gq4mAIVYd71QbLtTK1ZtHxcFyOUWgkVlmPR8wSpT57gUUL3zV0OV3rhZBbeTcfFlpbjAiEoHy3Srask+HYlTOpjzJp5hVJe96v+zy1hjBCGjpoMq3bLIY7AyNE0m9vEykygTguIs22543hgoUkDn+PDceSMM8w4Z/zmNGbgb9LKPJ4t0yMkcvi0jOoeqMTRbsg8N8fFz2MdIfiu4WWoX6qdsyarrr34XQvrwmGYEToQmG4hC9IFuzYfp4m8QMXcU4pMqI6JYRYCSiZEWEharvP1iFuXRzKdw+eA6mGD/vnVL9OwMfiNPpKk0u5MOwfv79WKIuTrUOfs=
-  file: target/patata-$TRAVIS_TAG
   on:
+    condition: $TRAVIS_OS_NAME = "linux"
+    rust: stable
     tags: true
-
+    branch: /^v\d+\.\d+\.\d+.*$/
+  apy_key:
+    secure: IgRi66aW4szLZqVMxUZ0CLKmQNqpKnz5/2gqir65CHMNEDkyrkrNtrpoEz9hxPsd6sqxU1iqIBtFqPAVF71Lq7IyynISSlaE26amJVWld+4TF/kJbvIC/I4WLWCfNhdkEYbQ3lEXvpFXoiPw48o2UBgTl6Cv7ddWBWI+uwcSbqig2cgXVgR8MaADt7n4Vk9OBKqYdzf8xDWDgdRQK8MlM1Z19kBfOG5Y78r2iIsbSEvrvFkSMp2cza/v55/x0xPqUqmklUw51DqXD8miW6LngVb0zlcPqopUoiy2v2h0fzR6NBGfgclztibPYJdHArDBoeFmZd/ogk5cdJZNUvYkifOGh/wIBqYVtm6OSk6kIG/5mFTwCMtw1B++OWl/Q6W6xt4GJG0aOZ0eoxV95uMBU4apNTI+jnOYiUflAJsfEwWGmhu8r/vzSrZsW5/RU/HSqUp67/Xs9XzIJN5RIbco73WaD/lmxo4pKakqJWmW/qOF702YInv41Favx78mo670Wj6TRtEtA6wAynkUFdC9z4j+xRsbO8eEiSiPFlikdL2caGrkF9Zwv9HR0NYA/yGeebPCph35t9FR5NE9bMRyqFcdvzxJIqhO4nfK/XpuDhLHs+RRnA9Xw0dpxR1lxAAigTfy2P5EphA0Y8LCjeOPfIO6crtsollrvCtUUnxGkco=
+  api_key:
+    secure: Gy1XwbkPG00GUR+DRArniBPqWhipZtD05+xxJS2I907m2pSNsBlQPT6Su2xNIL0jopWIFgLJE6GT4lfK86Bnt9+PBGQRzfrjYl9Kj1t/n9PFITqNzLXwIjEmndg1zvgpkYRzoopRSp0mbUXvvuQKjXjI4OVzcSkIQ/kYmxP61PSd9hB4yGFjn1PmHhiYz0Rgh6j3ljheiXuvOCaqvDqkdxmkJvDfRHHNNyWv+9Vukf8oBg/HlJ2B2MeWHUzeRQCMMtOW0xeBZFG2jK8o1ocyYUs0Uy1ZWgqD3YLQzYDh5NQZPuRYKy67MVI8qxW3Drqa7OkYp0QBezx6qWpdnJKy6IjJxYNd0guVaBj5CzVjs7ki2hvyHWSQ72JU/lRLR7RjUGY4h0lo9VClfzwUwHFp6ur2uw06DBsyvS5A/hcVLsFP6M6nQ0xAjeBRf9JwrKykcXeIWxh+zYlsWWU/uow9GyoMoVNTT+QCeCxyclnJYGlSB+GnfS6sL5/5bzk2OzMGzYcq/G9TRPu13vp+VmBN50Ny94Eb9JwDIxJ33tqwymtoT9QrNSVTbQyyXKBPi/KITvss69U66eU5loDlyw8MciPObnV/kmVl12+HjHoQoCeX0i95E92ZI6u//ZeogB0BJH+uI0v9WMZ0p18cpVgftwVVcijqBKOns3DDf+UBT9M=

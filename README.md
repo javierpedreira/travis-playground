@@ -1,0 +1,1 @@
+[![Build Status](https://travis-ci.org/javierpedreira/travis-playground.svg?branch=master)](https://travis-ci.org/javierpedreira/travis-playground)[![codecov](https://codecov.io/gh/javierpedreira/travis-playground/branch/master/graph/badge.svg)](https://codecov.io/gh/javierpedreira/travis-playground)
